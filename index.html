@@ -316,6 +316,7 @@ function buildOutputTable() {
   const table     = document.createElement('table');
   table.className = 'out-table';
 
+  // 분단 사이 spacer만 사용 (짝궁 사이 spacer 제거)
   const spacerTd = () => { const td = document.createElement('td'); td.className = 'spacer'; return td; };
 
   // 분단 헤더
@@ -324,7 +325,7 @@ function buildOutputTable() {
     if (gi > 0) headerRow.appendChild(spacerTd());
     const td = document.createElement('td');
     td.className = 'glbl';
-    td.colSpan   = paired ? 3 : 1;
+    td.colSpan   = paired ? 2 : 1;
     td.textContent = (gi + 1) + '분단';
     headerRow.appendChild(td);
   }
@@ -336,16 +337,16 @@ function buildOutputTable() {
     for (let gi = 0; gi < numGroups; gi++) {
       if (gi > 0) tr.appendChild(spacerTd());
       const rowSeats = seats.filter(s => s.group === gi && s.row === r).sort((a,b) => a.col - b.col);
-      rowSeats.forEach((seat, ci) => {
-        if (paired && ci === 1) tr.appendChild(spacerTd());
+      rowSeats.forEach((seat) => {
         const td = document.createElement('td');
         if (seat.name) {
           const st = students.find(s => s.name === seat.name);
-          // 번호(줄바꿈)이름 형태
-          td.textContent = st ? `${seat.name} ${st.no}` : seat.name;
+          td.innerHTML = st ? `${seat.name}<br>${st.no}` : seat.name;
+          td.dataset.copy = st ? `"${seat.name}\n${st.no}"` : seat.name;
         } else {
           td.className = 'empty-cell';
           td.textContent = '';
+          td.dataset.copy = '';
         }
         tr.appendChild(td);
       });
@@ -374,6 +375,8 @@ function copyTable() {
     const cells = [];
     tr.querySelectorAll('td').forEach(td => {
       if (td.classList.contains('spacer')) { cells.push(''); return; }
+      // data-copy 있으면 사용 (이름\n번호 형태, 엑셀 줄바꿈용 따옴표 포함)
+      if (td.dataset.copy !== undefined) { cells.push(td.dataset.copy); return; }
       cells.push(td.textContent.trim());
     });
     text += cells.join('\t') + '\n';
