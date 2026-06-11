@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>자리 배치 프로그램</title>
- <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💺</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💺</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
@@ -318,8 +318,8 @@ function buildOutputTable() {
 
   const spacerTd = () => { const td = document.createElement('td'); td.className = 'spacer'; return td; };
 
-  // 자리 행: 칠판 기준 앞줄(r=0)부터, 분단은 오른쪽(높은 gi)부터 → 180도 회전
-  for (let r = 0; r < numRows; r++) {
+  // 자리 행: 뒷줄(r=numRows-1)부터 앞줄(r=0)까지, 분단은 오른쪽(높은 gi)부터 → 180도 회전
+  for (let r = numRows - 1; r >= 0; r--) {
     const tr = document.createElement('tr');
     for (let gi = numGroups - 1; gi >= 0; gi--) {
       if (gi < numGroups - 1) tr.appendChild(spacerTd());
